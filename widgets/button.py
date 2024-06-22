@@ -1,3 +1,4 @@
+from typing import Optional, Literal
 from PySide6.QtCore import QEvent, QPropertyAnimation, QEasingCurve
 from PySide6.QtGui import QCursor, Qt, QColor
 from PySide6.QtWidgets import QPushButton, QGraphicsDropShadowEffect
@@ -39,15 +40,14 @@ class DarButton(QPushButton):
         self.setCursor(QCursor(Qt.PointingHandCursor))
         self.installEventFilter(self)
 
-        # Add shadow effect
-        shadow_effect = QGraphicsDropShadowEffect(self)
-        shadow_effect.setBlurRadius(15)
-        shadow_effect.setOffset(0, 2)
-        shadow_effect.setColor(QColor(0, 0, 0, 30))
-        self.setGraphicsEffect(shadow_effect)
+        self.switch_shadow_effect()
 
     def eventFilter(self, obj, event):
-        if event.type() == QEvent.MouseButtonPress:
+        if event.type() == QEvent.Enter:
+            self.hover_in()
+        elif event.type() == QEvent.Leave:
+            self.hover_out()
+        elif event.type() == QEvent.MouseButtonPress:
             self.setProperty("dar_btn_active", True)
             self.setProperty("dar_btn_default", False)
             self.style().unpolish(self)
@@ -58,3 +58,16 @@ class DarButton(QPushButton):
             self.style().unpolish(self)
             self.style().polish(self)
         return super().eventFilter(obj, event)
+
+    def hover_in(self):
+        self.switch_shadow_effect(hover_type='event_in')
+
+    def hover_out(self):
+        self.switch_shadow_effect(hover_type='event_out')
+
+    def switch_shadow_effect(self, hover_type: Optional[Literal['event_in', 'event_out']] = 'event_in'):
+        shadow_effect = QGraphicsDropShadowEffect(self)
+        shadow_effect.setBlurRadius(15)
+        shadow_effect.setOffset(0, 4 if hover_type == 'event_in' else 2)
+        shadow_effect.setColor(QColor(0, 0, 0, 60 if hover_type == 'event_in' else 30))
+        self.setGraphicsEffect(shadow_effect)
