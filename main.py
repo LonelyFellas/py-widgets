@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget
 import sys
 
-from widgets.button import CustomButton
+from widgets.button import DarButton
 
 
 class MainWindow(QMainWindow):
@@ -15,7 +15,7 @@ class MainWindow(QMainWindow):
 
         self.layout = QVBoxLayout(self.central_widget)
         self.label = QLabel("Initial Text")
-        button = CustomButton("Click me!")
+        button = DarButton("Click me!2233344")
         self.layout.addWidget(button)
         self.layout.addWidget(self.label)
 
