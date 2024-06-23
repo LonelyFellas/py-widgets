@@ -1,18 +1,19 @@
 from typing import Optional, Literal
-from PySide6.QtCore import QEvent, QPropertyAnimation, QEasingCurve, Property, QObject
-from PySide6.QtGui import QCursor, Qt, QColor, QPainter, QPainterPath
+from PySide6.QtCore import QEvent, QPropertyAnimation, QEasingCurve, Property, QObject, QSize
+from PySide6.QtGui import QCursor, Qt, QColor, QPainter, QPainterPath, QIcon
 from PySide6.QtWidgets import QPushButton, QGraphicsDropShadowEffect
 
 
 class DarButton(QPushButton):
     def __init__(self, text, parent=None, variant='outlined',
-                 shape: Optional[Literal['default', 'circle', 'round']] = 'default'):
+                 shape: Optional[Literal['default', 'circle', 'round']] = 'default', icon: str = None):
         super().__init__(text, parent)
         self.ripple_effects = []
         self.setObjectName("dar_btn")
         self.setProperty("dar_btn_default", True)
         self.setProperty("borderColor", Qt.transparent)
         self.computed_self_size(shape)
+        self.set_icon(icon)
         self.setStyleSheet("border: 1px solid rgba(0,0,0,0.2)")
 
         self.border_radius = self.computed_border_radius(shape)
@@ -95,8 +96,10 @@ class DarButton(QPushButton):
             self.adjustSize()
             self.setFixedSize(size_hint.width() + 5, size_hint.width() + 5)
 
-
-
+    def set_icon(self, icon):
+        if icon is not None:
+            self.setIcon(QIcon(icon))
+            self.setIconSize(QSize(10, 10))
     def create_ripple(self, pos):
         ripple = Ripple(self, pos)
         self.ripple_effects.append(ripple)
@@ -111,6 +114,7 @@ class DarButton(QPushButton):
         painter.setClipPath(path)
         for ripple in self.ripple_effects:
             ripple.paint(painter)
+
 
 class Ripple(QObject):
     def __init__(self, button, center):
