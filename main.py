@@ -15,8 +15,10 @@ class MainWindow(QMainWindow):
 
         self.layout = QVBoxLayout(self.central_widget)
         self.label = QLabel("Initial Text")
-        button = DarButton("Click me!2233344")
-        self.layout.addWidget(button)
+        button1 = DarButton("Click me!2233344")
+        button2 = DarButton("A", shape='circle')
+        self.layout.addWidget(button1)
+        self.layout.addWidget(button2)
         self.layout.addWidget(self.label)
 
         # 设置一个标签来显示是否热更新工作
